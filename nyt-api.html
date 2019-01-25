@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+</head>
+<body>
+        <form>
+                <label for="search-input">Search NYT articles!</label>
+                <input type="text" id="search"><br>
+
+                <label for="search-input">How many articles?</label>
+                <input type="text" id="many"><br>
+                <label for="begin-year">Begin year search</label>
+                <input type="text" id="begin"><br>
+                <label for="end-year">End year search</label>
+                <input type="text" id="end"><br>
+
+                <input id="submit" type="submit" value="Search NYT!">
+              </form>
+              <div id="urls">
+
+
+              </div>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        
+        
+        
+        $("#submit").on("click", function(event) {
+            event.preventDefault();
+            var search = $("#search").val();
+            var beginYear=$("#begin").val();
+            var endYear=$("#end").val();
+            if(beginYear<1851){
+                beginYear=1851;
+            }
+            if (endYear>2019) {
+                endYear=2019;
+            }
+            if (beginYear && endYear) {
+            var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + search  + "&begin_date=" + beginYear + "0101&end_date="+endYear+"1231"+"&api-key=5IROLoOa6iP5QQEaTfQskAGLnkR0DKpG";
+            
+            }   else if(beginYear) {
+                var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + search  + "&begin_date=" + beginYear + "0101&end_date=20191231"+"&api-key=5IROLoOa6iP5QQEaTfQskAGLnkR0DKpG";
+            } else if(endYear) {
+            var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + search  + "&begin_date=18510101&end_date="+endYear+"1231"+"&api-key=5IROLoOa6iP5QQEaTfQskAGLnkR0DKpG";
+
+            }
+             else{
+            var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + search +"&api-key=5IROLoOa6iP5QQEaTfQskAGLnkR0DKpG";
+
+            }
+            $("#search").val("");
+            $("#end").val("");
+            $("#begin").val("");
+            var num = Number($("#many").val());
+            $("#many").val("");
+            $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function(response){
+            $("#urls").empty();
+            console.log(response);
+            console.log(num);
+            var results=response.response.docs;
+            console.log(results[0].web_url);
+            for (var i=0; i<num; i++) {
+                var $a = $("<a>");
+                $a.attr("href", results[i].web_url);
+                $a.attr("target", "_blank");
+                console.log($a);
+               
+                var linkName=results[i].headline.main;
+                $a.html(linkName + "<br>");
+                $("#urls").append($a);
+            }
+
+        });
+        });
+        
+      
+
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    img {
+        display: "inline-block";
+        
+    }
+    
+    </style>
+
+
+</head>
+<body>
+<!-- https://api.nasa.gov/planetary/apod?api_key=lmNLbFfXVrNEP7XhumU57J8QTaovOUpqvmqz1T9S -->
+<script
+  src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+     
+    var queryURL = 'https://api.nasa.gov/planetary/apod?api_key=lmNLbFfXVrNEP7XhumU57J8QTaovOUpqvmqz1T9S';
+    var question="star";
+    var questionURL = 'https://images-api.nasa.gov/search?q=' + question + '&media_type=image';
+   $.ajax({
+    url: questionURL,
+    method:"GET"})
+    .then(function(response){
+    $div = $("<div>");
+
+    $("body").append($div);
+
+    $img = $("<img>");
+   var imgTest= response.collection.items[0].links[0].href;
+   console.log(imgTest);
+   for (var i=0; i<100; i++) {
+    $img = $("<img>");
+    $img.attr("src", response.collection.items[i].links[0].href);
+    $div.append($img);
+   }
+
+    console.log(response);
+
+
+   });
+       });
+    
+    </script>
+</body>
+</html>
